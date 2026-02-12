@@ -48,24 +48,6 @@
             color: var(--text-primary);
             line-height: 1.7;
             overflow-x: hidden;
-            cursor: none;
-        }
-
-        /* Custom Cursor */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--accent-1);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s ease, background 0.2s ease;
-        }
-
-        .cursor.hover {
-            transform: scale(2);
-            background: var(--accent-1);
         }
 
         /* Noise Overlay */
@@ -879,13 +861,6 @@
         }
 
         @media (max-width: 768px) {
-            body {
-                cursor: auto;
-            }
-
-            .cursor {
-                display: none;
-            }
 
             .nav-menu {
                 display: none;
@@ -952,7 +927,6 @@
         <div class="bg-shape bg-shape-5" data-speed="0.04"></div>
     </div>
     <div class="particles" id="particles"></div>
-    <div class="cursor" id="cursor"></div>
 
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
@@ -1121,31 +1095,6 @@
     </footer>
 
     <script>
-        // Custom Cursor
-        const cursor = document.getElementById('cursor');
-        let mouseX = 0, mouseY = 0;
-        let cursorX = 0, cursorY = 0;
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-
-        function animateCursor() {
-            cursorX += (mouseX - cursorX) * 0.1;
-            cursorY += (mouseY - cursorY) * 0.1;
-            cursor.style.left = cursorX + 'px';
-            cursor.style.top = cursorY + 'px';
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
-
-        // Cursor hover effect
-        document.querySelectorAll('a, button, .bento-card, .service-card, .gallery-item').forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-        });
-
         // Navbar scroll effect
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');

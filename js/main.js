@@ -467,59 +467,6 @@ style.textContent = `
 document.head.appendChild(style);
 
 // ===================================
-// Mouse Cursor Effect (Optional Enhancement)
-// ===================================
-
-function initCursorEffect() {
-    const cursor = document.createElement('div');
-    cursor.className = 'custom-cursor';
-    cursor.style.cssText = `
-        position: fixed;
-        width: 20px;
-        height: 20px;
-        border: 2px solid var(--primary);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9999;
-        transition: all 0.15s ease;
-        transform: translate(-50%, -50%);
-    `;
-    document.body.appendChild(cursor);
-    
-    let mouseX = 0;
-    let mouseY = 0;
-    
-    document.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        
-        cursor.style.left = mouseX + 'px';
-        cursor.style.top = mouseY + 'px';
-    });
-    
-    // Enlarge cursor on hover over interactive elements
-    const interactiveElements = document.querySelectorAll('a, button, .service-card, .portfolio-item');
-    interactiveElements.forEach(el => {
-        el.addEventListener('mouseenter', () => {
-            cursor.style.width = '40px';
-            cursor.style.height = '40px';
-            cursor.style.backgroundColor = 'rgba(99, 102, 241, 0.1)';
-        });
-        
-        el.addEventListener('mouseleave', () => {
-            cursor.style.width = '20px';
-            cursor.style.height = '20px';
-            cursor.style.backgroundColor = 'transparent';
-        });
-    });
-}
-
-// Uncomment to enable custom cursor (desktop only)
-if (window.innerWidth > 768) {
-    // initCursorEffect();
-}
-
-// ===================================
 // Performance Optimization
 // ===================================
 
