@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const shapeConfigs = [
   {
@@ -82,9 +82,40 @@ export default function BackgroundShapes() {
   const shapesRef = useRef<(HTMLDivElement | null)[]>([]);
   const scrollPosRef = useRef(0);
   const mouseRef = useRef({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
+  const animationIdRef = useRef<number | null>(null);
 
   useEffect(() => {
-    let animationId: number;
+    // SSRガード
+    if (typeof window === 'undefined') return;
+
+    // スマホ判定
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
+
+  useEffect(() => {
+    // SSRガード
+    if (typeof window === 'undefined') return;
+
+    // スマホではアニメーションを無効化
+    if (isMobile) {
+      // アニメーションをキャンセル
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+        animationIdRef.current = null;
+      }
+      return;
+    }
+
+    let ticking = false;
 
     const updateShapes = () => {
       shapesRef.current.forEach((shape, index) => {
@@ -99,11 +130,17 @@ export default function BackgroundShapes() {
         const mouseOffsetY = mouseRef.current.y * mouseIntensity;
         shape.style.transform = `translate(${scrollOffsetX + mouseOffsetX}px, ${scrollOffsetY + mouseOffsetY}px)`;
       });
-      animationId = requestAnimationFrame(updateShapes);
+      animationIdRef.current = requestAnimationFrame(updateShapes);
     };
 
     const handleScroll = () => {
-      scrollPosRef.current = window.scrollY / window.innerHeight;
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          scrollPosRef.current = window.scrollY / window.innerHeight;
+          ticking = false;
+        });
+      }
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -113,16 +150,18 @@ export default function BackgroundShapes() {
       };
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     document.addEventListener('mousemove', handleMouseMove);
     updateShapes();
 
     return () => {
-      cancelAnimationFrame(animationId);
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+      }
       window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <div style={containerStyle}>
@@ -130,7 +169,14 @@ export default function BackgroundShapes() {
         <div
           key={config.className}
           ref={(el) => { shapesRef.current[index] = el; }}
-          style={{ ...baseShapeStyle, ...config.style }}
+          style={{
+            ...baseShapeStyle,
+            ...config.style,
+            // スマホではtransformを固定
+            transform: isMobile ? 'translate(0, 0)' : undefined,
+            // スマホではwill-changeを無効化してメモリ節約
+            willChange: isMobile ? 'auto' : 'transform',
+          }}
         />
       ))}
     </div>

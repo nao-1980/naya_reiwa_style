@@ -9,18 +9,28 @@ export function useScrollReveal<T extends HTMLElement>() {
     const element = ref.current;
     if (!element) return;
 
-    const revealOnScroll = () => {
-      const top = element.getBoundingClientRect().top;
-      if (top < window.innerHeight - 100) {
-        element.classList.add('active');
+    // IntersectionObserverを使用してパフォーマンス改善
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            // 一度表示されたら監視を解除
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0,
+        rootMargin: '-100px 0px',
       }
+    );
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
     };
-
-    // Initial check
-    revealOnScroll();
-
-    window.addEventListener('scroll', revealOnScroll);
-    return () => window.removeEventListener('scroll', revealOnScroll);
   }, []);
 
   return ref;
@@ -28,27 +38,44 @@ export function useScrollReveal<T extends HTMLElement>() {
 
 export function useMultipleScrollReveal(count: number) {
   const refs = useRef<(HTMLElement | null)[]>([]);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    const revealOnScroll = () => {
-      refs.current.forEach((el) => {
-        if (!el) return;
-        const top = el.getBoundingClientRect().top;
-        if (top < window.innerHeight - 100) {
-          el.classList.add('active');
-        }
-      });
+    // IntersectionObserverを使用してパフォーマンス改善
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            // 一度表示されたら監視を解除
+            observerRef.current?.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0,
+        rootMargin: '-100px 0px',
+      }
+    );
+
+    // 既存の要素を監視
+    refs.current.forEach((el) => {
+      if (el) {
+        observerRef.current?.observe(el);
+      }
+    });
+
+    return () => {
+      observerRef.current?.disconnect();
     };
-
-    // Initial check
-    revealOnScroll();
-
-    window.addEventListener('scroll', revealOnScroll);
-    return () => window.removeEventListener('scroll', revealOnScroll);
   }, [count]);
 
   const setRef = (index: number) => (el: HTMLElement | null) => {
     refs.current[index] = el;
+    // 新しい要素が追加されたら監視開始
+    if (el && observerRef.current) {
+      observerRef.current.observe(el);
+    }
   };
 
   return setRef;

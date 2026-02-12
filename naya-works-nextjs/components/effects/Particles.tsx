@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const containerStyle: React.CSSProperties = {
   position: 'fixed',
@@ -26,11 +26,23 @@ interface ParticleConfig {
 
 export default function Particles() {
   const [particles, setParticles] = useState<ParticleConfig[]>([]);
-  const stylesRef = useRef<HTMLStyleElement | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // SSRガード
+    if (typeof window === 'undefined') return;
+
+    // スマホ判定
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+
+    // パーティクル数をスマホでは15、デスクトップでは40に
+    const particleCount = window.innerWidth < 768 ? 15 : 40;
     const particleConfigs: ParticleConfig[] = [];
-    for (let i = 0; i < 40; i++) {
+
+    for (let i = 0; i < particleCount; i++) {
       particleConfigs.push({
         id: i,
         left: `${Math.random() * 100}%`,
@@ -44,28 +56,14 @@ export default function Particles() {
     }
     setParticles(particleConfigs);
 
-    // Create keyframe animations
-    const style = document.createElement('style');
-    const keyframes = particleConfigs
-      .map(
-        (p) => `
-        @keyframes floatP${p.id} {
-          0%, 100% { transform: translate(0, 0); }
-          50% { transform: translate(${p.xMove}px, ${p.yMove}px); }
-        }
-      `
-      )
-      .join('\n');
-    style.textContent = keyframes;
-    document.head.appendChild(style);
-    stylesRef.current = style;
-
-    return () => {
-      if (stylesRef.current) {
-        document.head.removeChild(stylesRef.current);
-      }
-    };
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // スマホではパーティクルを非表示にしてパフォーマンス改善
+  if (isMobile) {
+    return null;
+  }
 
   return (
     <div style={containerStyle}>
@@ -81,9 +79,17 @@ export default function Particles() {
             width: `${particle.size}px`,
             height: `${particle.size}px`,
             opacity: particle.opacity,
-            animation: `floatP${particle.id} ${particle.duration}s ease-in-out infinite`,
+            // Safari互換: CSS変数を使わず、直接transformをアニメーション
+            animation: `floatParticle-${particle.id} ${particle.duration}s ease-in-out infinite`,
           }}
-        />
+        >
+          <style>{`
+            @keyframes floatParticle-${particle.id} {
+              0%, 100% { transform: translate(0, 0); }
+              50% { transform: translate(${particle.xMove}px, ${particle.yMove}px); }
+            }
+          `}</style>
+        </div>
       ))}
     </div>
   );
