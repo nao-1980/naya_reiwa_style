@@ -78,11 +78,23 @@ const baseShapeStyle: React.CSSProperties = {
   opacity: 0.5,
 };
 
+// スマホ用のシンプルな背景スタイル
+const mobileContainerStyle: React.CSSProperties = {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  pointerEvents: 'none',
+  zIndex: -1,
+  background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.1) 50%, rgba(139, 92, 246, 0.15) 100%)',
+};
+
 export default function BackgroundShapes() {
   const shapesRef = useRef<(HTMLDivElement | null)[]>([]);
   const scrollPosRef = useRef(0);
   const mouseRef = useRef({ x: 0, y: 0 });
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
   const animationIdRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -105,17 +117,10 @@ export default function BackgroundShapes() {
     // SSRガード
     if (typeof window === 'undefined') return;
 
-    // スマホではアニメーションを無効化
+    // スマホでは何もしない
     if (isMobile) {
-      // アニメーションをキャンセル
-      if (animationIdRef.current) {
-        cancelAnimationFrame(animationIdRef.current);
-        animationIdRef.current = null;
-      }
       return;
     }
-
-    let ticking = false;
 
     const updateShapes = () => {
       shapesRef.current.forEach((shape, index) => {
@@ -133,6 +138,7 @@ export default function BackgroundShapes() {
       animationIdRef.current = requestAnimationFrame(updateShapes);
     };
 
+    let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
         ticking = true;
@@ -163,6 +169,17 @@ export default function BackgroundShapes() {
     };
   }, [isMobile]);
 
+  // 初期レンダリング時（SSR）は何も表示しない
+  if (isMobile === null) {
+    return null;
+  }
+
+  // スマホではシンプルなグラデーション背景のみ
+  if (isMobile) {
+    return <div style={mobileContainerStyle} />;
+  }
+
+  // デスクトップでは通常の背景シェイプ
   return (
     <div style={containerStyle}>
       {shapeConfigs.map((config, index) => (
@@ -172,10 +189,6 @@ export default function BackgroundShapes() {
           style={{
             ...baseShapeStyle,
             ...config.style,
-            // スマホではtransformを固定
-            transform: isMobile ? 'translate(0, 0)' : undefined,
-            // スマホではwill-changeを無効化してメモリ節約
-            willChange: isMobile ? 'auto' : 'transform',
           }}
         />
       ))}
