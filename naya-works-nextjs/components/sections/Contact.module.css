@@ -1,0 +1,35 @@
+.contact {
+  padding: 8rem 2rem;
+  position: relative;
+}
+
+.contactContainer {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.contactTitle {
+  font-family: var(--font-noto), sans-serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.contactBtn {
+  margin-top: 1.5rem;
+}
+
+.contactInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+  .contactInfoGrid {
+    grid-template-columns: 1fr;
+  }
+}
