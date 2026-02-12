@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     // メール送信
     const { error } = await resend.emails.send({
       from: 'NAYA WORKS お問い合わせ <onboarding@resend.dev>',
-      to: 'nao@naya-works.jp',
+      to: 'nao526yolo@gmail.com', // TODO: 本番はnao@naya-works.jpに変更
       replyTo: email,
       subject: `【NAYAwebサイトよりご相談】${name}様`,
       text: `お名前: ${name}\nメールアドレス: ${email}\n\nお問い合わせ内容:\n${message}`,
