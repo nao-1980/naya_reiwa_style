@@ -17,19 +17,130 @@
   margin-bottom: 1.5rem;
 }
 
-.contactBtn {
-  margin-top: 1.5rem;
+/* Contact Form Styles */
+.contactForm {
+  max-width: 600px;
+  margin: 2rem auto 0;
+  text-align: left;
 }
 
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formLabel {
+  display: block;
+  font-family: var(--font-noto), sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.required {
+  color: #c77c7c;
+}
+
+.formInput,
+.formTextarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-family: var(--font-noto), sans-serif;
+  font-size: 1rem;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color, #e0ddd4);
+  border-radius: 8px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.formInput::placeholder,
+.formTextarea::placeholder {
+  color: var(--text-muted, #a9a5a0);
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(88, 130, 89, 0.1);
+}
+
+.formInput:disabled,
+.formTextarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.formTextarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.submitBtn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.submitBtn i {
+  margin-left: 0.5rem;
+}
+
+/* Status Messages */
+.errorMessage,
+.successMessage {
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.errorMessage {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.successMessage {
+  background-color: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+/* Info Grid */
 .contactInfoGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
-  margin-top: 3rem;
+  margin-top: 4rem;
 }
 
 @media (max-width: 768px) {
+  .contact {
+    padding: 4rem 1.5rem;
+  }
+
+  .contactForm {
+    margin-top: 1.5rem;
+  }
+
+  .formInput,
+  .formTextarea {
+    padding: 0.75rem;
+    font-size: 0.9375rem;
+  }
+
   .contactInfoGrid {
     grid-template-columns: 1fr;
+    margin-top: 3rem;
   }
 }
