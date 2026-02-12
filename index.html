@@ -48,24 +48,6 @@
             color: var(--text-primary);
             line-height: 1.7;
             overflow-x: hidden;
-            cursor: none;
-        }
-
-        /* Custom Cursor */
-        .cursor {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--accent-1);
-            border-radius: 50%;
-            position: fixed;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s ease, background 0.2s ease;
-        }
-
-        .cursor.hover {
-            transform: scale(2);
-            background: var(--accent-1);
         }
 
         /* Noise Overlay */
@@ -879,13 +861,6 @@
         }
 
         @media (max-width: 768px) {
-            body {
-                cursor: auto;
-            }
-
-            .cursor {
-                display: none;
-            }
 
             .nav-menu {
                 display: none;
@@ -952,7 +927,6 @@
         <div class="bg-shape bg-shape-5" data-speed="0.04"></div>
     </div>
     <div class="particles" id="particles"></div>
-    <div class="cursor" id="cursor"></div>
 
     <!-- Navigation -->
     <nav class="navbar" id="navbar">
