@@ -3,7 +3,6 @@ import { Space_Grotesk, Noto_Sans_JP } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import CustomCursor from "@/components/effects/CustomCursor";
 import BackgroundShapes from "@/components/effects/BackgroundShapes";
 import Particles from "@/components/effects/Particles";
 
@@ -42,7 +41,6 @@ export default function RootLayout({
         <div className="grid-pattern" />
         <BackgroundShapes />
         <Particles />
-        <CustomCursor />
         <Navbar />
         {children}
         <Footer />
