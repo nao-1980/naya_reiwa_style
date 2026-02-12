@@ -1,0 +1,23 @@
+.footer {
+  padding: 3rem 2rem;
+  border-top: 1px solid var(--border-color);
+  text-align: center;
+}
+
+.footerLogo {
+  margin-bottom: 1.5rem;
+}
+
+.footerLogoImg {
+  height: 40px;
+  width: auto;
+}
+
+.footerText {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.footerLogoLink {
+  display: inline-block;
+}

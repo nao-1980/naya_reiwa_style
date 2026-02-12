@@ -1,0 +1,64 @@
+.infoCard {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 2rem;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.infoCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+}
+
+.infoCardLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.infoIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.iconLocation {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.iconTime {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+}
+
+.iconAbout {
+  background: rgba(244, 114, 182, 0.15);
+  color: #f472b6;
+}
+
+.plantIcon {
+  width: 56px;
+  height: auto;
+  filter: invert(62%) sepia(50%) saturate(600%) hue-rotate(295deg) brightness(95%) contrast(95%);
+}
+
+.infoLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.infoText {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
